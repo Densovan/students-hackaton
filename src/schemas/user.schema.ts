@@ -20,6 +20,9 @@ export class User {
 
   @Prop({ default: '' })
   bio?: string;
+
+  @Prop({ default: '' })
+  avatar?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

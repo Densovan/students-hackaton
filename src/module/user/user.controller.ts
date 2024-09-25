@@ -1,7 +1,17 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { SigInDto, SignUpDto } from './user.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user')
 export class UserController {
@@ -20,5 +30,16 @@ export class UserController {
   async signIn(@Body() body: SigInDto) {
     const user = await this.userService.login(body);
     return user;
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
+  @Get('profile')
+  @UseGuards(AuthGuard())
+  async getProfile(@Req() req: any) {
+    console.log('work');
+    // console.log(req.user);
+    // const user = await this.userService.findById(req.user);
+    // return user;
   }
 }

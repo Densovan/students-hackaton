@@ -5,6 +5,8 @@ import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/schemas/user.schema';
 import { SigInDto, SignUpDto } from './user.dto';
 import { Bcrypt } from 'src/utils';
+import { createAvatar } from '@dicebear/avatars';
+import * as style from '@dicebear/avatars-bottts-sprites';
 
 @Injectable()
 export class UserService {
@@ -16,6 +18,12 @@ export class UserService {
   ) {}
 
   async register(createDTO: SignUpDto) {
+    const avatarSvg = createAvatar(style, {
+      seed: createDTO.email, // Use email or another unique value as the seed
+      base64: true, // Option to return as base64
+      width: 64,
+      height: 64,
+    });
     const existUser = await this.userModel.findOne({
       email: createDTO.email,
     });
@@ -27,6 +35,7 @@ export class UserService {
     const user = await this.userModel.create({
       ...createDTO,
       password: hashPass,
+      avatar: avatarSvg,
     });
 
     const token = this.jwtService.sign(
@@ -64,5 +73,14 @@ export class UserService {
       },
     );
     return { user, token };
+  }
+
+  async findById(id: string) {
+    console.log(id);
+    // const user = await this.userModel.findById(id);
+    // if (!user) {
+    //   throw new BadRequestException('User not found');
+    // }
+    return 'work';
   }
 }
