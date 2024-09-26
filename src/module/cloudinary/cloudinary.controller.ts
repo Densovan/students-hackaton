@@ -51,9 +51,10 @@ import {
 } from '@nestjs/common';
 import { CloudinaryService } from './cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 @Controller('upload')
+@ApiTags('Upload')
 export class UploadController {
   constructor(private readonly cloudinaryService: CloudinaryService) {}
 
@@ -76,7 +77,7 @@ export class UploadController {
   async uploadImage(@UploadedFile() file: Express.Multer.File) {
     try {
       const result = await this.cloudinaryService.uploadImage(file);
-      return result;
+      return result.url;
     } catch (error) {
       throw new BadRequestException(
         'Failed to upload image. Invalid file type or Cloudinary error.',

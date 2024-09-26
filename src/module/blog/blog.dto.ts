@@ -5,15 +5,15 @@ export class CreateBlogDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  readonly title: string;
+  readonly title?: string;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  readonly desc: string;
+  readonly desc?: string;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  readonly thumbnail: string;
+  readonly thumbnail?: string;
 }
