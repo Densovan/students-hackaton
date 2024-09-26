@@ -23,7 +23,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from 'src/schemas/user.schema';
 
 @Controller('user')
 @ApiTags('Auth and User')
