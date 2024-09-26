@@ -3,7 +3,12 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/schemas/user.schema';
-import { SigInDto, SignUpDto } from './user.dto';
+import {
+  SigInDto,
+  SignUpDto,
+  updateAvatarDto,
+  UpdateUserDto,
+} from './user.dto';
 import { Bcrypt } from 'src/utils';
 import { createAvatar } from '@dicebear/avatars';
 import * as style from '@dicebear/avatars-bottts-sprites';
@@ -76,11 +81,40 @@ export class UserService {
   }
 
   async findById(id: string) {
-    console.log(id);
-    // const user = await this.userModel.findById(id);
-    // if (!user) {
-    //   throw new BadRequestException('User not found');
-    // }
-    return 'work';
+    const user = await this.userModel.findById(id);
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+    return user;
+  }
+
+  async updateById(id: string, updateDTO: UpdateUserDto) {
+    const user = await this.userModel.findById(id);
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+    const update = await this.userModel.findByIdAndUpdate(
+      id,
+      {
+        ...updateDTO,
+      },
+      { new: true },
+    );
+    return update;
+  }
+
+  async changeProfile(id: string, updateAvatar: updateAvatarDto) {
+    const user = await this.userModel.findById(id);
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+    const update = await this.userModel.findByIdAndUpdate(
+      id,
+      {
+        updateAvatar,
+      },
+      { new: true },
+    );
+    return update;
   }
 }

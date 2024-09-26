@@ -34,3 +34,31 @@ export class SigInDto {
   @IsNotEmpty()
   password!: string;
 }
+
+export class UpdateUserDto {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  lastName: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  firstName: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  phoneNumber: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  bio: string;
+}
+
+export class updateAvatarDto {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  avatar: string;
+}
