@@ -3,9 +3,11 @@ import { BlogController } from './blog.controller';
 import { BlogService } from './blog.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Blog, BlogSchema } from 'src/schemas/blog.schema';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
+    UserModule,
     MongooseModule.forFeature([{ name: Blog.name, schema: BlogSchema }]),
   ],
   controllers: [BlogController],

@@ -11,10 +11,16 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './blog.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { Mongoose } from 'mongoose';
 
 @Controller('blog')
 @ApiTags('Blog')
@@ -27,17 +33,16 @@ export class BlogController {
   @UseGuards(AuthGuard())
   @ApiOperation({ summary: 'Create blog' })
   async createBlog(@Req() req: any, @Body() body: CreateBlogDto) {
-    console.log(req.user);
-    // return await this.blogService.createBlog(req.user.id, body);
+    return await this.blogService.createBlog(req.user.id, body);
   }
 
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
   @ApiOperation({ summary: 'Update blog' })
-  @Put('update-blog')
+  @Put('update-blog/:id')
   async updateBlog(
-    @Param() id: string,
+    @Param('id') id: string,
     @Req() req,
     @Body() body: CreateBlogDto,
   ) {
@@ -47,9 +52,9 @@ export class BlogController {
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
-  @ApiOperation({ summary: 'Get a blog' })
-  @Get('get-blog')
-  async getBlog(@Param() id: string) {
+  @ApiOperation({ summary: 'Get an own blog' })
+  @Get('get-blog/:id')
+  async getBlog(@Param('id') id: string) {
     return await this.blogService.findById(id);
   }
 
@@ -57,9 +62,9 @@ export class BlogController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
   @ApiOperation({ summary: 'Delete blog' })
-  @Delete('delete-blog')
-  async deleteBlog(@Param() id: string) {
-    return await this.blogService.deleteBlog(id);
+  @Delete('delete-blog/:id')
+  async deleteBlog(@Param('id') @Req() req, id: string) {
+    return await this.blogService.deleteBlog(id, req.user.id);
   }
 
   @HttpCode(HttpStatus.OK)
@@ -67,7 +72,7 @@ export class BlogController {
   @UseGuards(AuthGuard())
   @ApiOperation({ summary: 'Get all blog' })
   @Get('get-all-blog')
-  async getAllBlog() {
-    return await this.blogService.getAllBlog();
+  async getAllBlog(@Req() req) {
+    return await this.blogService.getAllBlog(req.user.id);
   }
 }
