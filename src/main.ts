@@ -20,8 +20,8 @@ async function bootstrap() {
   // app.use(compression);
   //=======>swagger config<<=========
   const config = new DocumentBuilder()
-    .setTitle('Khount API')
-    .setDescription('The Khount api API description')
+    .setTitle('Blog API')
+    .setDescription('The Blog api API description')
     .setVersion('1.0')
     // .addTag('API')
     .addBearerAuth({

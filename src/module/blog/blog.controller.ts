@@ -63,14 +63,14 @@ export class BlogController {
   @UseGuards(AuthGuard())
   @ApiOperation({ summary: 'Delete blog' })
   @Delete('delete-blog/:id')
-  async deleteBlog(@Param('id') @Req() req, id: string) {
+  async deleteBlog(@Param('id') id: string, @Req() req) {
     return await this.blogService.deleteBlog(id, req.user.id);
   }
 
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
-  @ApiOperation({ summary: 'Get all blog' })
+  @ApiOperation({ summary: 'Get all own blog' })
   @Get('get-all-blog')
   async getAllBlog(@Req() req) {
     return await this.blogService.getAllBlog(req.user.id);

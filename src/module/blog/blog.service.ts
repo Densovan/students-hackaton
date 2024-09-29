@@ -22,30 +22,36 @@ export class BlogService {
   }
 
   async updateBlog(id: string, userId: string, updateDTO: CreateBlogDto) {
+    const existBlog = await this.blogModel.findOne({
+      _id: id,
+      createdBy: userId,
+    });
+    if (!existBlog) {
+      throw new BadRequestException('Blog not found');
+    }
     const blog = await this.blogModel.findByIdAndUpdate(
       id,
       { ...updateDTO, updatedBy: userId },
-      {
-        new: true,
-      },
+      { new: true, runValidators: true },
     );
     return blog;
   }
 
   async deleteBlog(id: string, userId: string) {
-    const creator = await this.blogModel.findById(id);
-    const objectId = new mongoose.Types.ObjectId(id);
-    if (creator.createdBy !== objectId) {
-      throw new BadRequestException('You are not allowed to delete this blog');
+    const existBlog = await this.blogModel.findOne({
+      _id: id,
+      createdBy: userId,
+    });
+    if (!existBlog) {
+      throw new BadRequestException('Blog not found');
     }
     const blog = await this.blogModel.findByIdAndDelete(id);
     return blog;
   }
 
   async findById(id: string) {
-    const objectId = new Types.ObjectId(id);
     const blog = await this.blogModel.findById(id);
-    console.log(id, blog);
+
     if (!blog) {
       throw new BadRequestException('Blog not found');
     }
