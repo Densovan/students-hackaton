@@ -58,7 +58,49 @@ export class BlogService {
     return blog;
   }
 
-  async getAllBlog(ownerId: string) {
-    return await this.blogModel.find({ createdBy: ownerId });
+  // async getAllBlog(ownerId: string,page: number = 1, limit: number = 10) {
+  //   return await this.blogModel
+  //     .find({ createdBy: ownerId })
+  //     .populate('createdBy');
+  // }
+  async getAllBlog(ownerId: string, page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit; // Calculate the number of documents to skip
+
+    const blogs = await this.blogModel
+      .find({ createdBy: ownerId })
+      .skip(skip)
+      .limit(limit)
+      .populate('createdBy');
+
+    const totalBlogs = await this.blogModel.countDocuments({
+      createdBy: ownerId,
+    }); // Get total number of blogs
+
+    return {
+      totalBlogs, // Total number of blogs
+      currentPage: page, // Current page number
+      totalPages: Math.ceil(totalBlogs / limit), // Total number of pages
+      blogs, // Paginated blogs
+    };
+  }
+
+  async getPublicBlogs(page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+
+    const blogs = await this.blogModel
+      .find({})
+      .populate('createdBy')
+      .skip(skip) // Skip the previous pages
+      .limit(limit)
+      .sort({ createdAt: -1 }); // Limit the results per page
+
+    const totalBlogs = await this.blogModel.countDocuments({}); // Total number of blogs
+
+    return {
+      totalBlogs,
+      currentPage: page,
+      totalPages: Math.ceil(totalBlogs / limit),
+      blogs,
+    };
   }
 }

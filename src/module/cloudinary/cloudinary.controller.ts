@@ -77,7 +77,7 @@ export class UploadController {
   async uploadImage(@UploadedFile() file: Express.Multer.File) {
     try {
       const result = await this.cloudinaryService.uploadImage(file);
-      return result.url;
+      return result;
     } catch (error) {
       throw new BadRequestException(
         'Failed to upload image. Invalid file type or Cloudinary error.',

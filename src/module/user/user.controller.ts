@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -72,7 +73,7 @@ export class UserController {
 
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth()
-  @Post('change-profile')
+  @Put('change-profile')
   @UseGuards(AuthGuard())
   @ApiOperation({ summary: 'Update own profile picture data' })
   async changeProfile(@Req() req: any, @Body() body: updateAvatarDto) {

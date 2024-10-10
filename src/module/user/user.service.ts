@@ -111,7 +111,7 @@ export class UserService {
     const update = await this.userModel.findByIdAndUpdate(
       id,
       {
-        updateAvatar,
+        avatar: updateAvatar.avatar,
       },
       { new: true },
     );
